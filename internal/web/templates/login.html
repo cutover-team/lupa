@@ -1,0 +1,9 @@
+{{template "head" .}}
+<div class="card login"><h1>{{if .Setup}}Первый пользователь{{else}}Вход{{end}}</h1>
+<p class="muted small">{{if .Setup}}Пользователей ещё нет. Создайте администратора.{{else}}Введите почту и пароль.{{end}}</p>
+<form class="stack" method="post" action="{{if .Setup}}/setup{{else}}/login{{end}}">
+<label>Почта<input type="email" name="email" required autocomplete="username"></label>
+<label>Пароль<input type="password" name="password" required minlength="8" autocomplete="{{if .Setup}}new-password{{else}}current-password{{end}}"></label>
+{{if .Error}}<div class="err">{{.Error}}</div>{{end}}
+<button class="primary" type="submit">{{if .Setup}}Создать и войти{{else}}Войти{{end}}</button></form></div>
+{{template "foot" .}}

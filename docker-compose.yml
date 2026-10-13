@@ -1,0 +1,63 @@
+# Lupa: аналитика на вашем сервере. Запуск: cp .env.example .env && docker compose up -d
+services:
+  clickhouse:
+    image: ${REGISTRY:-docker.io}/clickhouse/clickhouse-server:24.8
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_USER: lupa
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?задайте CLICKHOUSE_PASSWORD в .env}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+      - ./deploy/clickhouse-low-memory.xml:/etc/clickhouse-server/config.d/low-memory.xml:ro
+    ulimits:
+      nofile: { soft: 262144, hard: 262144 }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  lupa:
+    build:
+      context: .
+      args:
+        REGISTRY: ${REGISTRY:-docker.io}
+    restart: unless-stopped
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      LUPA_CLICKHOUSE_URL: http://clickhouse:8123
+      LUPA_CLICKHOUSE_DB: lupa
+      LUPA_CLICKHOUSE_USER: lupa
+      LUPA_CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      LUPA_BASE_URL: https://${LUPA_DOMAIN:?задайте LUPA_DOMAIN в .env}
+      LUPA_TZ: ${LUPA_TZ:-Europe/Moscow}
+      LUPA_TRUST_PROXY: "true"
+    volumes:
+      - lupa-data:/data
+
+  caddy:
+    image: ${REGISTRY:-docker.io}/library/caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      LUPA_DOMAIN: ${LUPA_DOMAIN}
+      SITE_DOMAIN: ${SITE_DOMAIN:-}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@${LUPA_DOMAIN}}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv/site:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - lupa
+
+volumes:
+  clickhouse:
+  lupa-data:
+  caddy-data:
+  caddy-config:

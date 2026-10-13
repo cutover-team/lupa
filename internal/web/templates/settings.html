@@ -1,0 +1,28 @@
+{{template "head" .}}
+{{template "sitenav" .}}
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h3>Код счётчика</h3><p class="small muted">Вставьте перед <code>&lt;/head&gt;</code> на всех страницах. Cookie не используются, баннер согласия не нужен.</p>
+<pre>&lt;script async src="{{.BaseURL}}/lupa.js" data-site="{{.Site.ID}}" data-clicks{{if .Site.Replay}} data-replay="{{.Site.ReplayPct}}"{{end}}&gt;&lt;/script&gt;</pre>
+<p class="small muted"><code>data-clicks</code> включает карту кликов. <code>data-replay="N"</code> записывает N % визитов для вебвизора. <code>data-mask-text</code> скрывает весь текст страницы в записях.</p>
+<p class="small muted">События и цели из кода страницы:</p>
+<pre>lupa('lead_sent', {interest: 'audit'});</pre>
+<p class="small muted">Если lupa.js ещё не загрузился, вызовы можно ставить в очередь:</p>
+<pre>window.lupa = window.lupa || function(){ (window.lupa.q = window.lupa.q || []).push(arguments) };</pre></div>
+<div class="card"><h3>Цели</h3><p class="small muted">Цель это имя события или путь страницы, начинающийся с /. Конверсия считается по визитам.</p>
+{{if .Goals}}<table><thead><tr><th>Цель</th><th>Условие</th><th></th></tr></thead><tbody>
+{{range .Goals}}<tr><td>{{.Name}}</td><td class="mono">{{.Event}}</td><td class="n"><form method="post" action="/sites/{{$.Site.ID}}/goals/{{.ID}}/delete" style="margin:0"><button class="ghost" type="submit">Удалить</button></form></td></tr>{{end}}
+</tbody></table>{{else}}<div class="empty">Целей нет</div>{{end}}
+<form class="stack" method="post" action="/sites/{{.Site.ID}}/goals" style="margin-top:12px">
+<label>Название<input name="name" placeholder="Заявка"></label>
+<label>Событие или путь<input name="event" placeholder="lead_sent или /thanks" required></label>
+{{if .Error}}<div class="err">{{.Error}}</div>{{end}}
+<button class="primary" type="submit">Добавить цель</button></form></div></div>
+<div class="card" style="margin-top:16px"><h3>Вебвизор</h3>
+<p class="small muted">Записи хранятся 30 дней. Содержимое полей ввода не записывается никогда. Элементы с атрибутом <code>data-lupa-block</code> заменяются заглушкой, с <code>data-lupa-mask</code> текст скрывается звёздочками. Сервер отклоняет записи, пока вебвизор выключен здесь.</p>
+<form method="post" action="/sites/{{.Site.ID}}/replay" class="stack">
+<label class="check" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="on" value="1" {{if .Site.Replay}}checked{{end}}> Вебвизор включён</label>
+<label>Доля записываемых визитов, %<input type="number" name="pct" min="1" max="100" value="{{.Site.ReplayPct}}"></label>
+<button class="primary" type="submit">Сохранить</button></form></div>
+<div class="card" style="margin-top:16px"><h3>Удалить сайт</h3><p class="small muted">Настройки и цели удаляются сразу, события в ClickHouse остаются до истечения срока хранения.</p>
+<form method="post" action="/sites/{{.Site.ID}}/delete" onsubmit="return confirm('Удалить сайт {{.Site.Domain}}?')"><button class="ghost" type="submit">Удалить сайт</button></form></div>
+{{template "foot" .}}

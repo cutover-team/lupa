@@ -1,0 +1,7 @@
+.env
+data/
+/lupa
+dev-credentials.txt
+# библиотеки вебвизора скачиваются командой make vendor
+internal/web/static/vendor/*.js
+internal/web/static/vendor/*.css

@@ -1,0 +1,11 @@
+{{template "head" .}}
+{{if .VendorReady}}<link rel="stylesheet" href="/static/vendor/rrweb-player.css">{{end}}
+<div id="replay" data-site="{{.Site.ID}}" data-rid="{{.RID}}">
+{{template "sitenav" .}}
+<p class="small muted"><a href="/sites/{{.Site.ID}}/replays">← все записи</a> · запись <span class="mono">{{.RID}}</span></p>
+{{if .VendorReady}}<div class="player" id="player"></div>
+<script src="/static/vendor/rrweb-player.js"></script>
+<script src="/static/app-replays.js"></script>
+{{else}}<div class="card"><b>Плеер не установлен.</b> <span class="muted small">Выполните <code>make vendor</code> и перезапустите сервер.</span></div>{{end}}
+</div>
+{{template "foot" .}}

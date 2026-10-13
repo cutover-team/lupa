@@ -1,0 +1,10 @@
+{{template "head" .}}
+<div id="replays" data-site="{{.Site.ID}}">
+{{template "sitenav" .}}
+{{if not .VendorReady}}<div class="card" style="margin-bottom:16px"><b>Библиотеки плеера не установлены.</b> <span class="muted small">Выполните <code>make vendor</code> в каталоге проекта и перезапустите сервер: это скачает rrweb и rrweb-player в <code>internal/web/static/vendor</code>.</span></div>{{end}}
+{{if not .Site.Replay}}<div class="card" style="margin-bottom:16px"><b>Вебвизор выключен.</b> <span class="muted small">Включите его в <a href="/sites/{{.Site.ID}}/settings">настройках</a> и добавьте атрибут <code>data-replay="10"</code> к тегу счётчика.</span></div>{{end}}
+<div class="bar"><select id="preset"><option value="today">Сегодня</option><option value="yesterday">Вчера</option><option value="7d" selected>7 дней</option><option value="30d">30 дней</option></select><span class="small muted" id="count"></span></div>
+<div class="card"><div id="list"></div></div>
+</div>
+<script src="/static/app-replays.js"></script>
+{{template "foot" .}}

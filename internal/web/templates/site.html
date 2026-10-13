@@ -1,0 +1,25 @@
+{{template "head" .}}
+<div id="dash" data-site="{{.Site.ID}}">
+{{template "sitenav" .}}
+<div class="bar"><span class="live">онлайн: <b id="rt-count">…</b></span><div style="flex:1"></div>
+<select id="preset"><option value="today">Сегодня</option><option value="yesterday">Вчера</option><option value="7d">7 дней</option><option value="30d">30 дней</option><option value="month">Этот месяц</option><option value="custom">Период…</option></select>
+<span id="customrange"><input type="date" id="from"> <input type="date" id="to"> <button class="ghost" id="apply">Показать</button></span></div>
+<div class="kpis" id="kpis"></div>
+<div class="card" style="margin-bottom:16px"><h2>Динамика</h2><div id="chart"></div></div>
+<div class="grid g2" style="margin-bottom:16px">
+<div class="card"><h2>Страницы</h2><div class="tabs" id="pagetabs"><button data-by="path">Адреса</button><button data-by="title">Заголовки</button><button data-by="entry">Входы</button></div><div id="pages"></div></div>
+<div class="card"><h2>Источники</h2><div id="sources"></div><h2 style="margin-top:18px">UTM-кампании</h2><div id="campaigns"></div></div></div>
+<div class="grid g2" style="margin-bottom:16px">
+<div class="card"><h2>Цели</h2><div id="goals"></div><h2 style="margin-top:18px">События</h2><div id="events"></div></div>
+<div class="card"><h2>Воронка</h2><p class="small muted">По одному шагу в строке: имя события или путь, начинающийся с /. Считается по визитам в выбранном периоде.</p>
+<textarea id="funnel-steps" rows="4" style="width:100%">/
+cta_contact
+lead_sent</textarea><div style="margin:8px 0"><button class="primary" id="funnel-run">Посчитать</button></div><div class="funnel" id="funnel-out"></div></div></div>
+<div class="grid g3" style="margin-bottom:16px">
+<div class="card"><h2>Устройства</h2><div id="devices"></div></div>
+<div class="card"><h2>Браузеры</h2><div id="browsers"></div></div>
+<div class="card"><h2>Операционные системы</h2><div id="oses"></div></div></div>
+<div class="grid g2"><div class="card"><h2>Сейчас на сайте</h2><div id="rt-pages"></div></div><div class="card"><h2>Последние 30 минут</h2><div id="rt-chart"></div></div></div>
+</div>
+<script src="/static/app.js"></script>
+{{template "foot" .}}

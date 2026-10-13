@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lupa · веб-аналитика на своём сервере</title>
+<meta name="description" content="Lupa: открытая веб-аналитика без cookie. Визиты, источники, цели, воронки, карта кликов и вебвизор. Данные остаются на вашем сервере в России.">
+<!-- Собственный счётчик Lupa: без cookie и без хранения IP. Замените адрес и data-site после развёртывания. -->
+<script async src="https://demo.getlupa.ru/lupa.js" data-site="1" data-clicks data-replay="100"></script>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#101828;--muted:#667085;--line:#e4e7ec;--accent:#2457d6;--accent-soft:#e8eefc;--ok:#12855a}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171d2b;--ink:#e8edf5;--muted:#98a2b3;--line:#2a3344;--accent:#7aa2ff;--accent-soft:#1f2a45}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:0 16px}
+.wrap{max-width:1040px;margin:0 auto}a{color:var(--accent)}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;letter-spacing:.02em;text-decoration:none;color:var(--ink);font-size:18px}.brand b{color:var(--accent)}
+nav{display:flex;gap:18px;font-size:14px;flex-wrap:wrap;justify-content:flex-end}nav a{text-decoration:none;color:var(--muted)}@media(max-width:700px){nav{display:none}}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:56px 0}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.12;margin:0 0 14px;letter-spacing:-.01em}
+.lead{font-size:18px;color:var(--muted);max-width:56ch}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:11px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;border:1px solid var(--line);color:var(--ink);background:var(--card)}
+.btn.p{background:var(--accent);color:#fff;border-color:transparent}
+pre{background:#0f1420;color:#e8edf5;border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.5;margin:0}
+.mock{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 12px 32px -16px rgba(0,0,0,.25)}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.kp div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}.kp b{display:block;font-size:22px}.kp span{font-size:12px;color:var(--muted)}
+.rows div{display:grid;grid-template-columns:1fr auto;gap:8px;padding:6px 8px;position:relative;font-size:13px}.rows i{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);z-index:0;border-radius:4px}.rows span,.rows b{position:relative}
+section{padding:40px 0;border-top:1px solid var(--line)}h2{font-size:24px;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}.card h3{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--muted);font-size:14.5px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.yes{color:var(--ok);font-weight:600}.no{color:var(--muted)}
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:860px){.price{grid-template-columns:1fr}}
+.price .card b{font-size:22px;display:block;margin:6px 0}.price ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}
+footer{padding:28px 0 48px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--line)}
+code{background:var(--accent-soft);padding:1px 5px;border-radius:4px;font-size:.92em}
+</style>
+</head>
+<body><div class="wrap">
+<header><a class="brand" href="/">LU<b>PA</b></a><nav><a href="#features">Возможности</a><a href="#compare">Сравнение</a><a href="#install">Установка</a><a href="#services">Услуги</a><a href="#install">Установка</a><a href="https://github.com/cutover-team/lupa">GitHub</a></nav></header>
+
+<div class="hero">
+<div>
+<h1>Веб-аналитика, которая живёт на вашем сервере и не требует cookie-баннера</h1>
+<p class="lead">Открытый код, Go и ClickHouse, один docker-compose. Визиты, источники, цели, воронки, карта кликов и вебвизор. IP не хранится, cookie не ставятся, данные не покидают вашу инфраструктуру.</p>
+<div class="btns"><a class="btn p" href="https://demo.getlupa.ru">Открыть демо</a><a class="btn" href="https://github.com/cutover-team/lupa">Репозиторий</a><a class="btn" href="#install">Поставить за 10 минут</a></div>
+</div>
+<div class="mock" aria-hidden="true">
+<div class="kp"><div><b>1 284</b><span>Посетители · +9 %</span></div><div><b>2 031</b><span>Просмотры · +12 %</span></div><div><b>4,1 %</b><span>Конверсия в заявку</span></div></div>
+<div class="rows"><div><i style="width:100%"></i><span>Хабр</span><b>412</b></div><div><i style="width:61%"></i><span>Telegram</span><b>251</b></div><div><i style="width:44%"></i><span>Яндекс</span><b>180</b></div><div><i style="width:23%"></i><span>(прямые)</span><b>96</b></div></div>
+</div>
+</div>
+
+<section id="features"><h2>Что внутри</h2>
+<div class="grid">
+<div class="card"><h3>Отчёты</h3><p>Посетители, визиты, отказы, время на сайте, сравнение с прошлым периодом, страницы, входы, источники, UTM, устройства, браузеры, ОС.</p></div>
+<div class="card"><h3>Цели и воронки</h3><p>События из кода одной строкой, цели по событию или пути, конверсия по визитам, воронки до 8 шагов внутри визита.</p></div>
+<div class="card"><h3>Реалтайм</h3><p>Кто на сайте прямо сейчас, какие страницы открыты, динамика по минутам за последние полчаса.</p></div>
+<div class="card"><h3>Карта кликов</h3><p>Топ элементов по странице, глубина скролла, тепловая карта прямо поверх вашей страницы без iframe.</p></div>
+<div class="card"><h3>Вебвизор</h3><p>Запись визитов через rrweb. Поля ввода не записываются никогда, текст можно скрыть целиком, записи живут 30 дней.</p></div>
+<div class="card"><h3>Приватность по умолчанию</h3><p>Нет cookie, нет localStorage, IP не сохраняется: посетитель это суточный хеш, который нельзя обратить. Данные удаляются через 24 месяца.</p></div>
+</div></section>
+
+<section id="compare"><h2>Чем отличается</h2>
+<table><thead><tr><th></th><th>Lupa</th><th>Яндекс Метрика</th><th>Matomo</th><th>Plausible</th></tr></thead><tbody>
+<tr><td>Данные на вашем сервере</td><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td><td class="yes">да</td></tr>
+<tr><td>Без cookie и хранения IP</td><td class="yes">да</td><td class="no">нет</td><td class="no">опционально</td><td class="yes">да</td></tr>
+<tr><td>Российский продукт</td><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td><td class="no">нет</td></tr>
+<tr><td>Работает, когда у провайдера инцидент</td><td class="yes">да</td><td class="no">нет</td><td class="yes">да</td><td class="yes">да</td></tr>
+<tr><td>Карта кликов и вебвизор</td><td class="yes">да</td><td class="yes">да</td><td class="yes">да</td><td class="no">нет</td></tr>
+<tr><td>Связка с рекламными кабинетами</td><td class="no">нет</td><td class="yes">Директ</td><td class="no">слабая</td><td class="no">нет</td></tr>
+<tr><td>Установка</td><td>docker-compose, 10 минут</td><td>скрипт</td><td>PHP и MySQL</td><td>docker</td></tr>
+</tbody></table>
+<p style="color:var(--muted);font-size:14px;margin-top:10px">Lupa ставится рядом с Метрикой, а не вместо неё, если вам нужна связка с Директом. Когда Метрика недоступна, отчёты у вас остаются.</p>
+</section>
+
+<section id="install"><h2>Установка</h2>
+<p style="color:var(--muted)">Нужен VPS с Docker от 2 ГБ памяти и домен с A-записью на него. Сертификат выпускается автоматически.</p>
+<pre>git clone https://github.com/cutover-team/lupa.git &amp;&amp; cd lupa
+cp .env.example .env     # домен, почта, пароль ClickHouse
+docker compose up -d --build</pre>
+<p style="color:var(--muted);font-size:14.5px;margin-top:12px">Дальше одна строка на сайте:</p>
+<pre>&lt;script async src="https://stats.ваш-домен.ru/lupa.js" data-site="1" data-clicks&gt;&lt;/script&gt;</pre>
+</section>
+
+<section id="services"><h2>Если не хочется ставить самим</h2>
+<div class="price">
+<div class="card"><h3>Установка под ключ</h3><b>от 30 000 ₽</b><ul><li>Разворачиваем на вашем сервере</li><li>Настраиваем цели и воронки</li><li>Передаём доступы и документацию</li></ul></div>
+<div class="card"><h3>Сопровождение</h3><b>от 5 000 ₽ в месяц</b><ul><li>Обновления и резервные копии</li><li>Мониторинг инстанса</li><li>Помощь с отчётами</li></ul></div>
+<div class="card"><h3>Управляемая установка</h3><b>от 20 000 ₽ в месяц</b><ul><li>Защищённый сервер в РФ на ваше имя</li><li>Поручение на обработку в договоре</li><li>Для банков, медицины, госзаказчиков</li></ul></div>
+</div>
+<p style="margin-top:18px">Вопросы и заявки: <b>hello@cutover.ru</b>. Lupa делает инженерная команда <a href="https://cutover.ru">Cutover</a>, которая строит резервные контуры и переносит инфраструктуру между облаками.</p>
+</section>
+
+<footer>Lupa · открытый код под лицензией AGPL-3.0 · на этом сайте нет форм и сторонних счётчиков, посещаемость считает сама Lupa без cookie, и эти же данные вы видите в <a href="https://demo.getlupa.ru">демо</a>.</footer>
+</div></body></html>

@@ -1,0 +1,16 @@
+{{template "head" .}}
+<div id="clicks" data-site="{{.Site.ID}}">
+{{template "sitenav" .}}
+<div class="bar">
+<select id="preset"><option value="today">Сегодня</option><option value="yesterday">Вчера</option><option value="7d" selected>7 дней</option><option value="30d">30 дней</option></select>
+<select id="path" style="min-width:260px"></select>
+<button class="primary" id="open">Открыть карту на сайте</button>
+<span class="small muted" id="hint"></span></div>
+<div class="grid g2">
+<div class="card"><h2>Элементы, по которым кликают</h2><div id="elements"></div></div>
+<div><div class="card" style="margin-bottom:16px"><h2>Сводка по странице</h2><div class="kpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:0" id="kpis"></div></div>
+<div class="card"><h2>Глубина скролла</h2><p class="small muted">Доля визитов, долиставших до отметки.</p><div class="scroll" id="scroll"></div></div></div></div>
+<p class="small muted" style="margin-top:14px">Чтобы клики записывались, у тега счётчика должен быть атрибут <code>data-clicks</code>. Карта накладывается прямо на вашу страницу: кнопка откроет её в новой вкладке с временным токеном на 2 часа.</p>
+</div>
+<script src="/static/app-clicks.js"></script>
+{{template "foot" .}}

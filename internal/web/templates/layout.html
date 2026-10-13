@@ -1,0 +1,6 @@
+{{define "head"}}<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}} · Lupa</title><link rel="stylesheet" href="/static/app.css"></head><body><div class="wrap">
+<header class="top"><a class="brand" href="/">LU<b>PA</b> <span class="muted small">аналитика</span></a>
+<nav>{{if .User}}<a href="/">Сайты</a><span class="muted">{{.User.Email}}</span><form method="post" action="/logout" style="margin:0"><button class="ghost" type="submit">Выйти</button></form>{{end}}</nav></header>{{end}}
+{{define "foot"}}<footer>Lupa · веб-аналитика без cookie, данные остаются на вашем сервере.</footer></div></body></html>{{end}}

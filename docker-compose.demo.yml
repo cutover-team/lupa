@@ -1,0 +1,38 @@
+# Публичное демо: второй инстанс Lupa с отдельной базой и синтетическими данными.
+# Запуск: docker compose -f docker-compose.yml -f docker-compose.demo.yml up -d
+services:
+  lupa:
+    ports:
+      - "127.0.0.1:8080:8080"   # для администрирования с сервера
+  lupa-demo:
+    build:
+      context: .
+      args:
+        REGISTRY: ${REGISTRY:-docker.io}
+    restart: unless-stopped
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      LUPA_CLICKHOUSE_URL: http://clickhouse:8123
+      LUPA_CLICKHOUSE_DB: lupa_demo
+      LUPA_CLICKHOUSE_USER: lupa
+      LUPA_CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      LUPA_BASE_URL: https://${DEMO_DOMAIN:?задайте DEMO_DOMAIN в .env}
+      LUPA_TZ: ${LUPA_TZ:-Europe/Moscow}
+      LUPA_TRUST_PROXY: "true"
+      LUPA_DEMO_USER: ${DEMO_USER:-demo@getlupa.ru}
+      LUPA_READONLY: ${DEMO_READONLY:-true}
+    volumes:
+      - lupa-demo-data:/data
+    ports:
+      - "127.0.0.1:8081:8080"
+  caddy:
+    environment:
+      DEMO_DOMAIN: ${DEMO_DOMAIN}
+    depends_on:
+      - lupa
+      - lupa-demo
+
+volumes:
+  lupa-demo-data:

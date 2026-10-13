@@ -1,0 +1,12 @@
+{{template "head" .}}
+<h1>Сайты</h1>
+<div class="grid g2" style="margin-top:16px">
+<div class="card">{{if .Sites}}<table><thead><tr><th>Сайт</th><th>Домен</th><th class="n">ID</th></tr></thead><tbody>
+{{range .Sites}}<tr><td><a href="/sites/{{.ID}}">{{.Name}}</a></td><td class="mono">{{.Domain}}</td><td class="n mono">{{.ID}}</td></tr>{{end}}
+</tbody></table>{{else}}<div class="empty">Сайтов пока нет. Добавьте первый.</div>{{end}}</div>
+<div class="card"><h3>Добавить сайт</h3><form class="stack" method="post" action="/sites">
+<label>Название<input name="name" placeholder="Cutover"></label>
+<label>Домен<input name="domain" placeholder="cutover.ru" required></label>
+{{if .Error}}<div class="err">{{.Error}}</div>{{end}}
+<button class="primary" type="submit">Добавить</button></form></div></div>
+{{template "foot" .}}
