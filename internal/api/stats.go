@@ -93,7 +93,7 @@ FROM (
   SELECT session_id, any(visitor_id) AS visitor_id,
          countIf(name = 'pageview') AS pv,
          countIf(name NOT IN ('pageview', 'engage')) AS ev,
-         greatest(dateDiff('second', min(ts), max(ts)), toInt64(maxIf(duration_ms, name = 'engage') / 1000)) AS dur
+         least(1800, greatest(dateDiff('second', min(ts), max(ts)), toInt64(maxIf(duration_ms, name = 'engage') / 1000))) AS dur
   FROM events WHERE %s GROUP BY session_id
 )`, s.where(site, p))
 	rows, err := ch.Query[Overview](ctx, s.ch, q)
