@@ -47,6 +47,9 @@ services:
     environment:
       LUPA_DOMAIN: ${LUPA_DOMAIN}
       SITE_DOMAIN: ${SITE_DOMAIN:-}
+      PANEL_AUTH_ENABLED: ${PANEL_AUTH_ENABLED:-false}
+      PANEL_AUTH_USER: ${PANEL_AUTH_USER:-lupa}
+      PANEL_AUTH_HASH: ${PANEL_AUTH_HASH:-}
       ACME_EMAIL: ${ACME_EMAIL:-admin@${LUPA_DOMAIN}}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro

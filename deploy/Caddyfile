@@ -7,6 +7,15 @@
 # Панель и счётчик Lupa
 {$LUPA_DOMAIN} {
   encode zstd gzip
+  # Второй замок на панель: HTTP Basic Auth поверх логина Lupa.
+  # Открытыми остаются только счётчик и приём событий. Включается PANEL_AUTH_ENABLED=true и хешем PANEL_AUTH_HASH в .env.
+  @panel {
+    expression `{env.PANEL_AUTH_ENABLED} == "true"`
+    not path /lupa.js /lupa-visual.js /api/event /api/click /api/replay /api/heatmap /static/vendor/* /healthz
+  }
+  basic_auth @panel {
+    {$PANEL_AUTH_USER:lupa} {$PANEL_AUTH_HASH:$2a$14$ifbzZVv4dkeC/l6jbLoit.LQRoG.aCeBQ.HSD6iz1rnqe/hP874Z6}
+  }
   reverse_proxy lupa:8080
 }
 
